@@ -1,51 +1,97 @@
 import 'package:flutter/material.dart';
-import 'OverpassModel.dart';
-import 'SensorDataModel.dart';
-import 'RefreshGate.dart';
-import 'utils.dart';
-import 'package:scoped_model/scoped_model.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
-void main() {
-  final stationsModel = MoscowStationsModel();
-  final withStations =
-      ScopedModel<MoscowStationsModel>(model: stationsModel, child: AppRoot());
-  final sensorDataModel = SensorDataModel();
-  final withSensors =
-      ScopedModel<SensorDataModel>(model: sensorDataModel, child: withStations);
-  runApp(withSensors);
-}
+import 'components/RequestStatusIndicator.dart';
+
+import 'store/MoscowStations.dart';
+import 'store/SensorData.dart';
+
+import 'utils/RequestStatus.dart';
+import 'utils/string.dart';
+import 'utils/function.dart';
+
+void main() => runApp(MultiProvider(
+      providers: [
+        Provider<MoscowStations>(value: MoscowStations()),
+        // Provider<SensorData>(value: SensorData()),
+      ],
+      child: AppRoot(),
+    ));
 
 class AppRoot extends StatelessWidget {
-  buildAppBody() => ScopedModelDescendant<SensorDataModel>(
-      builder: (context, child, model) => RefreshGate(
-          500,
-          (context) =>
-              Column(children: [Text(DateTime.now().toIso8601String())]),
-          true),
-//      builder: (context, child, model) => Column(children: [Text(model.x.toString()), Text(model.y.toString()), Text(model.z.toString()), Text(model.measurements.toString())]),
+  @override
+  Widget build(BuildContext context) => MaterialApp(
+        title: 'Welcome to Flutter',
+        home: SensorDataHome(),
+      );
+}
+
+class StationListHome extends StatelessWidget {
+  buildAppBody(context) {
+    final moscowStations = Provider.of<MoscowStations>(context);
+    return Observer(builder: (_) {
+      switch (moscowStations.elementsRequestStatus) {
+        case RequestStatus.success:
+          return ElementListBody(moscowStations.elements);
+        case RequestStatus.failure:
+          return Text(moscowStations.loadingError);
+        default:
+          return RequestStatusIndicator(moscowStations.elementsRequestStatus);
+      }
+    });
+  }
+
+  buildActionButton(context) => FloatingActionButton(
+        onPressed: Provider.of<MoscowStations>(context).queryStations,
+        tooltip: 'Query Stations',
+        child: Icon(Icons.file_download),
+      );
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+      appBar: AppBar(title: Text('Welcome to Flutter')),
+      body: Center(child: buildAppBody(context)),
+      floatingActionButton: buildActionButton(context));
+}
+
+class SensorDataHome extends StatelessWidget {
+  buildAppBody(context) => Text("lol");
+//  {
+//    final sensorData = Provider.of<SensorData>(context);
+//    return Observer(
+//      builder: (_) => Column(children: [
+//            Text(sensorData.x.toString()),
+//            Text(sensorData.y.toString()),
+//            Text(sensorData.z.toString()),
+//            Text(sensorData.measurements.toString())
+//          ]),
+//    );
+//  }
+
+//  buildAppBody() => RefreshGate(
+//          500,
+//          (context) =>
+//              Column(children: [Text(DateTime.now().toIso8601String())]),
+//          true),
+
+//      builder: (context, child, model) =>
 
 //      builder: (context, child, model) =>
 //          model.elementsRequestStatus == RequestStatus.success
 //              ? ElementListBody(model.elements)
 //              : RequestStatusIndicator(model.elementsRequestStatus),
-      child: null);
-
-  buildActionButton(context) => FloatingActionButton(
-        onPressed: ScopedModel.of<SensorDataModel>(context).startListening,
-        tooltip: 'Query Stations',
-        child: Icon(Icons.file_download),
-      );
-
-  buildHome(context) => Scaffold(
-      appBar: AppBar(title: Text('Welcome to Flutter')),
-      body: Center(child: buildAppBody()),
-      floatingActionButton: buildActionButton(context));
+//      child: null);
 
   @override
-  Widget build(BuildContext context) => MaterialApp(
-        title: 'Welcome to Flutter',
-        home: buildHome(context),
-      );
+  Widget build(BuildContext context) => Scaffold(
+      appBar: AppBar(title: Text('Accelerometer sensor data')),
+      body: Center(child: buildAppBody(context)),
+      floatingActionButton: FloatingActionButton(
+        onPressed: /*Provider.of<SensorData>(context).*/startListening,
+        tooltip: 'Start listening',
+        child: Icon(Icons.file_download),
+      ));
 }
 
 class ElementListBody extends StatefulWidget {
