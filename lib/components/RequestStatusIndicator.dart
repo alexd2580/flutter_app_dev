@@ -10,9 +10,9 @@ class RequestStatusIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     switch (_status) {
       case RequestStatus.waiting:
-        return Text("Waiting...");
+        return Icon(Icons.cached);
       case RequestStatus.inProgress:
-        return Text("Loading");
+        return RefreshProgressIndicator();
       case RequestStatus.failure:
         return Text("Error!");
       case RequestStatus.success:

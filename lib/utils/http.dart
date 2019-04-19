@@ -8,24 +8,28 @@ String encodeParam(MapEntry<String, dynamic> entry) =>
 String encodeParams(Map<String, dynamic> params) =>
     params.entries.map(encodeParam).join("&");
 
-Future<http.Response> httpGet(baseUrl, [Map<String, dynamic> params]) async {
-  var url;
+Future<http.Response> httpGet(baseUrl,
+    [String path, Map<String, dynamic> params]) async {
+  var url = baseUrl;
+  if (path != null) {
+    url = "$url/$path";
+  }
   if (params != null) {
     final encodedParams = encodeParams(params);
-    url = "$baseUrl?$encodedParams";
-  } else {
-    url = baseUrl;
+    url = "$url?$encodedParams";
   }
   return await http.get(url);
 }
 
-Future<String> httpGetSuccess(baseUrl, [Map<String, dynamic> params]) async {
-  final response = await httpGet(baseUrl, params);
+Future<String> httpGetSuccess(baseUrl,
+    [String path, Map<String, dynamic> params]) async {
+  final response = await httpGet(baseUrl, path, params);
   if (response.statusCode != 200) {
     throw Exception();
   }
   return response.body;
 }
 
-Future<Map> httpGetJson(baseUrl, [Map<String, dynamic> params]) async =>
-    jsonDecode(await httpGetSuccess(baseUrl, params));
+Future<Map> httpGetJson(baseUrl,
+        [String path, Map<String, dynamic> params]) async =>
+    jsonDecode(await httpGetSuccess(baseUrl, path, params));

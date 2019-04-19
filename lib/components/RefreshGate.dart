@@ -13,6 +13,7 @@ class RefreshGate extends StatefulWidget {
 }
 
 class RefreshGateState extends State<RefreshGate> {
+  // ignore: UNUSED_FIELD
   Timer _timer;
   bool _running = false;
 
@@ -33,4 +34,3 @@ class RefreshGateState extends State<RefreshGate> {
   @override
   Widget build(BuildContext context) => _childBuilder(context);
 }
-

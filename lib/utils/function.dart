@@ -5,3 +5,11 @@ List<B> mapWithIndex<A, B>(List<A> list, B f(A, int)) {
   }
   return result;
 }
+
+A attempt<A>(A function(), [A defaultValue]) {
+  try {
+    return function();
+  } catch (something) {
+    return defaultValue;
+  }
+}

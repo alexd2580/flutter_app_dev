@@ -22,6 +22,8 @@ dependencies:
   sensors: ^0.4.0+1
   provider: ^1.6.1
   mobx:
+  sentry: any
+  path: ^1.6.2
   flutter_mobx:
   flutter:
     sdk: flutter
@@ -48,10 +50,8 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
-  # To add assets to your application, add an assets section, like this:
-  # assets:
-  #  - images/a_dot_burr.jpeg
-  #  - images/a_dot_ham.jpeg
+  assets:
+    - secrets/sentry.txt
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.
