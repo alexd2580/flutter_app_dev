@@ -1,6 +1,6 @@
 import 'http.dart';
 
-enum Season { spring, summer, autumn, winter }
+enum Season { spring, summer, fall, winter }
 
 String seasonToString(Season season) {
   switch (season) {
@@ -8,7 +8,7 @@ String seasonToString(Season season) {
       return "spring";
     case Season.summer:
       return "summer";
-    case Season.autumn:
+    case Season.fall:
       return "autumn";
     case Season.winter:
       return "winter";

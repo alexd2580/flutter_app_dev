@@ -13,3 +13,20 @@ A attempt<A>(A function(), [A defaultValue]) {
     return defaultValue;
   }
 }
+
+Map<V, K> reverseMap<K, V>(Map<K, V> data) =>
+    data.map((key, value) => MapEntry(value, key));
+
+typedef Parser<T> = T Function(String);
+Parser<V> parseWithMessage<V>(Map<String, V> container, String description) =>
+    (String stringRepr) =>
+        container[stringRepr] ??
+        (() {
+          print("Unknown $description: $stringRepr");
+          return null;
+        })();
+
+typedef Printer<T> = String Function(T);
+Printer<V> printWithDefault<V>(
+        Map<V, String> container, String defaultString) =>
+    (V value) => container[value] ?? defaultString;

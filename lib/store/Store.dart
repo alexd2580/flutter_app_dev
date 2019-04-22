@@ -1,11 +1,20 @@
+import 'AnimeList.dart';
+import 'AnimeDetailsView.dart';
+import 'GenreList.dart';
+import 'ProducerList.dart';
+
 class Store {
-    final Store _instance = Store();
-    ourInstance = new Store();
+  static final _instance = Store();
 
-    static Store getInstance() {
-        return ourInstance;
-    }
+  AnimeList _animeList = AnimeList();
+  static AnimeList get animeList => _instance._animeList;
 
-    private Store() {
-    }
+  AnimeDetailsView _animeDetailsView = AnimeDetailsView();
+  static AnimeDetailsView get animeDetailsView => _instance._animeDetailsView;
+
+  GenreList _genreList = GenreList();
+  static GenreList get genreList => _instance._genreList;
+
+  ProducerList _producerList = ProducerList();
+  static ProducerList get producerList => _instance._producerList;
 }

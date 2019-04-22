@@ -3,29 +3,24 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
-import 'package:provider/provider.dart';
 import 'package:sentry/sentry.dart';
 
 import 'screens/Home.dart' as screens;
 import 'screens/AnimeList.dart' as screens;
 import 'screens/AnimeDetails.dart' as screens;
 
-import 'store/AnimeList.dart' as store;
-import 'store/AnimeDetailsView.dart' as store;
-
-final app = MultiProvider(
-    providers: [
-      Provider<store.AnimeList>(value: store.AnimeList()),
-      Provider<store.AnimeDetailsView>(value: store.AnimeDetailsView()),
-    ],
-    child: MaterialApp(
-      title: 'Unofficial MAL viewer',
-      home: screens.Home(),
-      routes: {
-        "/animes": (context) => screens.AnimeList(),
-        "/anime": (context) => screens.AnimeDetails(),
-      },
-    ));
+final app = MaterialApp(
+  title: 'Unofficial MAL viewer',
+  home: screens.Home(),
+  routes: {
+    "/animes": (context) => screens.AnimeList(),
+    "/anime": (context) => screens.AnimeDetails(),
+    "/search_season": (context) => screens.AnimeList(),
+    "/search_genre": (context) => screens.AnimeList(),
+    "/search_name": (context) => screens.AnimeList(),
+    "/search_advanced": (context) => screens.AnimeList(),
+  },
+);
 
 void main() async {
   final sentryDsn = await rootBundle.loadString('secrets/sentry.txt');

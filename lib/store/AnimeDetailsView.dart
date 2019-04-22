@@ -2,17 +2,15 @@ import 'package:mobx/mobx.dart';
 
 part 'AnimeDetailsView.g.dart';
 
-enum AnimeDetailsViewFocus { header, content }
-
 class AnimeDetailsView = _AnimeDetailsView with _$AnimeDetailsView;
 
 abstract class _AnimeDetailsView implements Store {
   @observable
-  AnimeDetailsViewFocus focus = AnimeDetailsViewFocus.header;
+  int focus;
 
   @action
-  setFocus(AnimeDetailsViewFocus focus) => this.focus = focus;
+  setFocus(int focus) => this.focus = this.focus == focus ? null : focus;
 
   @action
-  void reset() => focus = AnimeDetailsViewFocus.header;
+  void reset() => focus = null;
 }

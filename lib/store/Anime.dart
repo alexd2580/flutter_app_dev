@@ -1,72 +1,62 @@
-import 'package:mobx/mobx.dart';
 import 'package:path/path.dart';
 
 import '../utils/function.dart';
 
-part 'Anime.g.dart';
+import 'Genre.dart';
+import 'Producer.dart';
+import 'Store.dart';
 
-enum AnimeType { tv }
+enum AnimeType { tv, ova, movie, special, ona }
+const stringToAnimeType = {
+  "TV": AnimeType.tv,
+  "OVA": AnimeType.ova,
+  "Movie": AnimeType.movie,
+  "Special": AnimeType.special,
+  "ONA": AnimeType.ona,
+};
+final animeTypeToString = reverseMap(stringToAnimeType);
+final parseAnimeType = parseWithMessage(stringToAnimeType, "anime type");
+final printAnimeType = printWithDefault(animeTypeToString, "Ugh");
 
-AnimeType parseAnimeType(String type) {
-  if (type == "TV") {
-    return AnimeType.tv;
-  }
-  print(type);
-  return null;
+enum Source {
+  lightNovel,
+  original,
+  manga,
+  yonKomaManga,
+  game,
+  novel,
+  webManga,
+  visualNovel,
+  pictureBook,
+  cardGame,
+  dash,
+  other
 }
+const stringToSource = {
+  "Light novel": Source.lightNovel,
+  "Original": Source.original,
+  "Manga": Source.manga,
+  "4-koma manga": Source.yonKomaManga,
+  "Game": Source.game,
+  "Novel": Source.novel,
+  "Web manga": Source.webManga,
+  "Visual novel": Source.visualNovel,
+  "Picture book": Source.pictureBook,
+  "Card game": Source.cardGame,
+  "-": Source.dash,
+  "Other": Source.other,
+};
+final sourceToString = reverseMap(stringToSource);
+final parseSource = parseWithMessage(stringToSource, "anime source");
+final printSource = printWithDefault(sourceToString, "Ugh");
 
-String printAnimeType(AnimeType type) {
-  switch (type) {
-    case AnimeType.tv:
-      return "TV";
-    default:
-      return "Ugh";
-  }
-}
+class Anime {
+  int malId; // 33352
+  String url; // "https://myanimelist.net/anime/33352/Violet_Evergarden"
+  String title; // "Violet Evergarden"
+  String
+      imageUrl; // "https://cdn.myanimelist.net/images/anime/1795/95088.jpg?s=e2e6133e60a7f5351826fc9f72bdddb8"
 
-class Genre {}
-
-enum Source { lightNovel }
-
-Source parseSource(String source) {
-  if (source == "Light novel") {
-    return Source.lightNovel;
-  }
-  print(source);
-  return null;
-}
-
-String printSource(Source source) {
-  switch (source) {
-    case Source.lightNovel:
-      return "Light novel";
-    default:
-      return "Ugh";
-  }
-}
-
-class Producer {}
-
-class Anime = _Anime with _$Anime;
-
-abstract class _Anime implements Store {
-  // 33352
-  @observable
-  int malId;
-
-  // "https://myanimelist.net/anime/33352/Violet_Evergarden"
-  @observable
-  String url;
-
-  // "Violet Evergarden"
-  @observable
-  String title;
-
-  // "https://cdn.myanimelist.net/images/anime/1795/95088.jpg?s=e2e6133e60a7f5351826fc9f72bdddb8"
-  @observable
-  String imageUrl;
-
-  @computed
   String get largeImageUrl {
     if (imageUrl == null) {
       return null;
@@ -79,46 +69,21 @@ abstract class _Anime implements Store {
     return newUrl.toString();
   }
 
-  @observable
   String synopsis; // "The Great War finally came to an end ..."
-
-  @observable
   AnimeType type; // "TV"
-
-  @observable
   DateTime airingStart; // "2018-01-10T15:00:00+00:00"
-
-  @observable
   int episodes; // 13
-
-  @observable
   int members; // 510406
-
-  @observable
-  ObservableList<Genre> genres;
-
-  @observable
+  List<Genre> genres;
   Source source; // "Light novel"
-
-  @observable
-  ObservableList<Producer> producers;
-
-  @observable
+  List<Producer> producers;
   num score; // 8.61
-
-  @observable
-  ObservableList<String> licensors;
-
-  @observable
+  List<String> licensors;
   bool r18; // false
-
-  @observable
   bool kids; // false
-
-  @observable
   bool continuing; // false
 
-  _Anime.fromMalJson(Map<String, dynamic> anime, [BuildContext context]) {
+  void _assignFromMalJson(Map<String, dynamic> anime) {
     malId = anime["mal_id"];
     title = anime["title"];
     imageUrl = anime["image_url"];
@@ -127,16 +92,31 @@ abstract class _Anime implements Store {
     airingStart = attempt(() => DateTime.parse(anime["airing_start"]));
     episodes = anime["episodes"];
     members = anime["members"];
-    print(anime["genres"]);
-    genres = null; // anime["genres"];
+    genres = anime["genres"]
+        .map((genre) => Genre.getFromMalJson(genre))
+        .cast<Genre>()
+        .toList();
     source = parseSource(anime["source"]);
-    print(anime["producers"]);
-    producers = null; // anime["producers"]
+    producers = anime["producers"]
+        .map((producer) => Producer.getFromMalJson(producer))
+        .cast<Producer>()
+        .toList();
     score = anime["score"];
-    print(anime["licensors"]);
-    licensors = null; // anime["licensors"]
+    licensors = anime["licensors"].cast<String>();
     r18 = anime["r18"];
     kids = anime["kids"];
     continuing = anime["continuing"];
+  }
+
+  Anime._fromMalJson(Map<String, dynamic> anime) {
+    _assignFromMalJson(anime);
+  }
+
+  factory Anime.getFromMalJson(Map<String, dynamic> anime) {
+    final malId = anime["mal_id"];
+    return Store.animeList.animes.update(malId, (entry) {
+      entry._assignFromMalJson(anime);
+      return entry;
+    }, ifAbsent: () => Anime._fromMalJson(anime));
   }
 }
