@@ -29,6 +29,8 @@ enum Source {
   visualNovel,
   pictureBook,
   cardGame,
+  digitalManga,
+  book,
   dash,
   other
 }
@@ -43,6 +45,8 @@ const stringToSource = {
   "Visual novel": Source.visualNovel,
   "Picture book": Source.pictureBook,
   "Card game": Source.cardGame,
+  "Digital manga": Source.digitalManga,
+  "Book": Source.book,
   "-": Source.dash,
   "Other": Source.other,
 };

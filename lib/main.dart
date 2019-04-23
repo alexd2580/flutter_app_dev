@@ -23,9 +23,13 @@ final app = MaterialApp(
 );
 
 void main() async {
-  final sentryDsn = await rootBundle.loadString('secrets/sentry.txt');
-  final SentryClient sentry =
-      sentryDsn != null ? SentryClient(dsn: sentryDsn) : null;
+  var sentry;
+  try {
+    final sentryDsn = await rootBundle.loadString('secrets/sentry.txt');
+    sentry = SentryClient(dsn: sentryDsn);
+  } catch (error) {
+    print("No Sentry DSN specified");
+  }
 
   FlutterError.onError = (FlutterErrorDetails details) =>
       Zone.current.handleUncaughtError(details.exception, details.stack);
