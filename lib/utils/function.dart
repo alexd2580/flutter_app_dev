@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 List<B> mapWithIndex<A, B>(List<A> list, B f(A, int)) {
   List<B> result = [];
   for (var i = 0; i < list.length; i++) {
@@ -30,3 +32,9 @@ typedef Printer<T> = String Function(T);
 Printer<V> printWithDefault<V>(
         Map<V, String> container, String defaultString) =>
     (V value) => container[value] ?? defaultString;
+
+Expanded expand(Widget child) => Expanded(child: child);
+
+typedef Func0<R> = R Function();
+typedef Func1<P1, R> = R Function(P1);
+typedef Func2<P1, P2, R> = R Function (P1, P2);

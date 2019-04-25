@@ -15,20 +15,19 @@ class AppDrawer extends StatelessWidget {
     return Drawer(
         child: ListView(children: [
       ListTile(
-        leading: Icon(Icons.date_range),
-        title: Text('By season'),
-        onTap: () => Navigator.pushReplacementNamed(context, "/search_season")
-      ),
+          leading: Icon(Icons.date_range),
+          title: Text('By season'),
+          onTap: () =>
+              Navigator.pushReplacementNamed(context, "/search_season")),
       ListTile(
           leading: Icon(Icons.category),
           title: Text('By genre'),
-          onTap: () => Navigator.pushReplacementNamed(context, "/search_genre")
-      ),
+          onTap: () =>
+              Navigator.pushReplacementNamed(context, "/search_genre")),
       ListTile(
           leading: Icon(Icons.text_fields),
           title: Text('By name'),
-          onTap: () => Navigator.pushReplacementNamed(context, "/search_name")
-      ),
+          onTap: () => Navigator.pushReplacementNamed(context, "/search_name")),
     ]));
   }
 }

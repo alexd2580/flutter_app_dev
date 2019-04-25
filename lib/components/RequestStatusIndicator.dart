@@ -12,7 +12,7 @@ class RequestStatusIndicator extends StatelessWidget {
       case RequestStatus.waiting:
         return Icon(Icons.cached);
       case RequestStatus.inProgress:
-        return RefreshProgressIndicator();
+        return CircularProgressIndicator();
       case RequestStatus.failure:
         return Text("Error!");
       case RequestStatus.success:

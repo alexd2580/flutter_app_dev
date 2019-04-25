@@ -1,7 +1,5 @@
 import 'package:path/path.dart';
-
 import '../utils/function.dart';
-
 import 'Genre.dart';
 import 'Producer.dart';
 import 'Store.dart';

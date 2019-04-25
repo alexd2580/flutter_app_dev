@@ -6,19 +6,19 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:sentry/sentry.dart';
 
 import 'screens/Home.dart' as screens;
-import 'screens/AnimeList.dart' as screens;
+import 'screens/SeasonSearch.dart' as screens;
 import 'screens/AnimeDetails.dart' as screens;
 
 final app = MaterialApp(
   title: 'Unofficial MAL viewer',
   home: screens.Home(),
   routes: {
-    "/animes": (context) => screens.AnimeList(),
+    // "/animes": (context) => screens.AnimeList(),
     "/anime": (context) => screens.AnimeDetails(),
-    "/search_season": (context) => screens.AnimeList(),
-    "/search_genre": (context) => screens.AnimeList(),
-    "/search_name": (context) => screens.AnimeList(),
-    "/search_advanced": (context) => screens.AnimeList(),
+    "/search_season": (context) => screens.SeasonSearch(),
+    // "/search_genre": (context) => screens.AnimeList(),
+    // "/search_name": (context) => screens.AnimeList(),
+    // "/search_advanced": (context) => screens.AnimeList(),
   },
 );
 

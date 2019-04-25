@@ -1,3 +1,3 @@
-import 'AnimeList.dart';
+import 'SeasonSearch.dart';
 
-class Home extends AnimeList {}
+class Home extends SeasonSearch {}
